@@ -1,39 +1,51 @@
-// VerilogTestBench.h
-#ifndef VERILOG_TEST_BENCH_H
-#define VERILOG_TEST_BENCH_H
+#ifndef _VERILOG_TEST_BENCH_H_
+#define _VERILOG_TEST_BENCH_H_
 
 #include <string>
 #include <vector>
 #include <map>
+#include <jsoncpp/json/json.h> // Json::Value 需要 jsoncpp
 
-// 表示 clock 結構
-struct ClockConfig
+// 時脈設定
+class ClockConfig
 {
+public:
     std::string name;
-    int period; // in ns
+    int period;
     std::string unit;
+
+    ClockConfig();
+    ClockConfig(const std::string &name, int period, const std::string &unit);
 };
 
-// 表示 reset 結構
-struct ResetConfig
+// Reset 設定
+class ResetConfig
 {
+public:
     std::string name;
     std::string type; // e.g., "synchronous"
     bool active_high;
+
+    ResetConfig();
+    ResetConfig(const std::string &name, const std::string &type, bool active_high);
 };
 
-// 每個時間點的 I/O 操作與預期輸出
-struct IOPattern
-{
-    int time; // in ns
-    std::map<std::string, std::string> inputs;
-    std::map<std::string, std::string> expected_outputs;
-};
-
-// 總體測試架構
-class VerilogTestBench
+// I/O Pattern：每一筆的 input/output
+class IOPattern
 {
 public:
+    int time;
+    std::map<std::string, std::string> inputs;
+    std::map<std::string, std::string> expected_outputs;
+
+    IOPattern();
+    IOPattern(int t, const std::map<std::string, std::string> &in, const std::map<std::string, std::string> &out);
+};
+
+// 主體 Test Bench 類別
+class VerilogTestBench
+{
+protected:
     std::string module;
     std::string timescale;
     ClockConfig clock;
@@ -42,8 +54,25 @@ public:
     std::vector<std::string> output_ports;
     std::vector<IOPattern> patterns;
 
-    // 將結構內容轉成 JSON 字串
-    std::string dump2JSON() const;
+public:
+    // Constructors
+    VerilogTestBench();
+    virtual ~VerilogTestBench();
+
+    // 設定方法
+    void setModule(const std::string &m);
+    void setTimescale(const std::string &ts);
+    void setClock(const ClockConfig &clk);
+    void setReset(const ResetConfig &rst);
+    void setInputs(const std::vector<std::string> &inputs);
+    void setOutputs(const std::vector<std::string> &outputs);
+    void addPattern(const IOPattern &pattern);
+
+    // 將整個 testbench 輸出成 JSON 格式
+    virtual std::string dump2JSON(void);
+
+    // future:
+    // virtual void JSON2Object(Json::Value *);
 };
 
-#endif // VERILOG_TEST_BENCH_H
+#endif /* _VERILOG_TEST_BENCH_H_ */

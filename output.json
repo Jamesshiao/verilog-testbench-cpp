@@ -1,0 +1,44 @@
+{
+  "module": "add_dff",
+  "timescale": "1ns/1ps",
+  "clock": {
+    "name": "clk",
+    "period": 10,
+    "unit": "ns"
+  },
+  "reset": {
+    "name": "rst",
+    "type": "synchronous",
+    "active_high": true
+  },
+  "IO ports": {
+    "inputs": ["clk", "rst", "a", "b", "sel"],
+    "outputs": ["result"]
+  },
+  "IO patterns": [
+    {
+      "time": 0,
+      "inputs": {"a": "0000", "b": "0000", "rst": "1", "sel": "0"}
+    },
+    {
+      "time": 5,
+      "inputs": {"rst": "0"}
+    },
+    {
+      "time": 12,
+      "inputs": {"a": "0010", "b": "0011", "sel": "1"}
+    },
+    {
+      "time": 22,
+      "expected_outputs": {"result": "0101"}
+    },
+    {
+      "time": 25,
+      "inputs": {"sel": "0"}
+    },
+    {
+      "time": 35,
+      "expected_outputs": {"result": "0010"}
+    }
+  ]
+}

@@ -1,20 +1,82 @@
 #include "VerilogTestBench.h"
 #include <sstream>
-#include <iomanip>
 
-// helper: 將字串加上雙引號
-std::string quote(const std::string &s)
+// ---------- ClockConfig 實作 ----------
+
+ClockConfig::ClockConfig() : name("clk"), period(10), unit("ns") {}
+
+ClockConfig::ClockConfig(const std::string &n, int p, const std::string &u)
+    : name(n), period(p), unit(u) {}
+
+// ---------- ResetConfig 實作 ----------
+
+ResetConfig::ResetConfig() : name("rst"), type("synchronous"), active_high(true) {}
+
+ResetConfig::ResetConfig(const std::string &n, const std::string &t, bool a)
+    : name(n), type(t), active_high(a) {}
+
+// ---------- IOPattern 實作 ----------
+
+IOPattern::IOPattern() : time(0) {}
+
+IOPattern::IOPattern(int t, const std::map<std::string, std::string> &in,
+                     const std::map<std::string, std::string> &out)
+    : time(t), inputs(in), expected_outputs(out) {}
+
+// ---------- VerilogTestBench 實作 ----------
+
+VerilogTestBench::VerilogTestBench() {}
+
+VerilogTestBench::~VerilogTestBench() {}
+
+void VerilogTestBench::setModule(const std::string &m)
+{
+    module = m;
+}
+
+void VerilogTestBench::setTimescale(const std::string &ts)
+{
+    timescale = ts;
+}
+
+void VerilogTestBench::setClock(const ClockConfig &clk)
+{
+    clock = clk;
+}
+
+void VerilogTestBench::setReset(const ResetConfig &rst)
+{
+    reset = rst;
+}
+
+void VerilogTestBench::setInputs(const std::vector<std::string> &inputs)
+{
+    input_ports = inputs;
+}
+
+void VerilogTestBench::setOutputs(const std::vector<std::string> &outputs)
+{
+    output_ports = outputs;
+}
+
+void VerilogTestBench::addPattern(const IOPattern &pattern)
+{
+    patterns.push_back(pattern);
+}
+
+// ---------- Helper functions ----------
+
+static std::string quote(const std::string &s)
 {
     return "\"" + s + "\"";
 }
 
-// helper: 輸出 map 為 JSON 格式（C++14 版本）
-std::string mapToJSON(const std::map<std::string, std::string> &m)
+static std::string mapToJSON(const std::map<std::string, std::string> &m)
 {
     std::ostringstream oss;
     oss << "{";
     bool first = true;
-    for (auto it = m.begin(); it != m.end(); ++it)
+    for (std::map<std::string, std::string>::const_iterator it = m.begin(); it != m.end(); ++it)
     {
         if (!first)
             oss << ", ";
@@ -25,8 +87,23 @@ std::string mapToJSON(const std::map<std::string, std::string> &m)
     return oss.str();
 }
 
-// dump2JSON 實作
-std::string VerilogTestBench::dump2JSON() const
+static std::string vectorToJSON(const std::vector<std::string> &v)
+{
+    std::ostringstream oss;
+    oss << "[";
+    for (size_t i = 0; i < v.size(); ++i)
+    {
+        oss << quote(v[i]);
+        if (i != v.size() - 1)
+            oss << ", ";
+    }
+    oss << "]";
+    return oss.str();
+}
+
+// ---------- dump2JSON ----------
+
+std::string VerilogTestBench::dump2JSON(void)
 {
     std::ostringstream oss;
     oss << "{\n";
@@ -49,26 +126,8 @@ std::string VerilogTestBench::dump2JSON() const
 
     // IO ports
     oss << "  " << quote("IO ports") << ": {\n";
-
-    // inputs
-    oss << "    " << quote("inputs") << ": [";
-    for (size_t i = 0; i < input_ports.size(); ++i)
-    {
-        oss << quote(input_ports[i]);
-        if (i != input_ports.size() - 1)
-            oss << ", ";
-    }
-    oss << "],\n";
-
-    // outputs
-    oss << "    " << quote("outputs") << ": [";
-    for (size_t i = 0; i < output_ports.size(); ++i)
-    {
-        oss << quote(output_ports[i]);
-        if (i != output_ports.size() - 1)
-            oss << ", ";
-    }
-    oss << "]\n";
+    oss << "    " << quote("inputs") << ": " << vectorToJSON(input_ports) << ",\n";
+    oss << "    " << quote("outputs") << ": " << vectorToJSON(output_ports) << "\n";
     oss << "  },\n";
 
     // IO patterns
@@ -80,16 +139,11 @@ std::string VerilogTestBench::dump2JSON() const
         oss << "      " << quote("time") << ": " << p.time;
         if (!p.inputs.empty())
         {
-            oss << ",\n";
-            oss << "      " << quote("inputs") << ": " << mapToJSON(p.inputs);
+            oss << ",\n      " << quote("inputs") << ": " << mapToJSON(p.inputs);
         }
         if (!p.expected_outputs.empty())
         {
-            if (p.inputs.empty())
-                oss << ",\n";
-            else
-                oss << ",\n";
-            oss << "      " << quote("expected_outputs") << ": " << mapToJSON(p.expected_outputs);
+            oss << ",\n      " << quote("expected_outputs") << ": " << mapToJSON(p.expected_outputs);
         }
         oss << "\n    }";
         if (i != patterns.size() - 1)
@@ -97,7 +151,7 @@ std::string VerilogTestBench::dump2JSON() const
         oss << "\n";
     }
     oss << "  ]\n";
-
     oss << "}";
+
     return oss.str();
 }

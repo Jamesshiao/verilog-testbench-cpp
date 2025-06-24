@@ -1,6 +1,7 @@
 # 編譯器與選項
 CXX = g++
 CXXFLAGS = -std=c++14 -Wall -Wextra -O2
+LDLIBS = -ljsoncpp
 
 # 目標檔名
 TARGET = testbench
@@ -15,7 +16,7 @@ OBJS = $(SRCS:.cpp=.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
