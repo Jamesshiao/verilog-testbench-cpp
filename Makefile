@@ -1,26 +1,49 @@
-# 編譯器與選項
-CXX = g++
-CXXFLAGS = -std=c++14 -Wall -Wextra -O2
-LDLIBS = -ljsoncpp
+# Makefile for JSON generator (EE1520 Style)
+# Project: ModuleConfig JSON Writer
 
-# 目標檔名
-TARGET = testbench
+CXX = g++ -std=c++14
 
-# 所有源碼檔案
-SRCS = main.cpp VerilogTestBench.cpp
+# jsoncpp include path
+CFLAGS = -g -I/usr/include/jsoncpp
 
-# 所有物件檔
-OBJS = $(SRCS:.cpp=.o)
+# jsoncpp lib path and linking
+LDFLAGS = -L/opt/homebrew/lib -ljsoncpp
 
-# 預設目標：編譯可執行檔
-all: $(TARGET)
+CORE_INCS = \
+	Signal.h Time.h ClockConfig.h ResetConfig.h IOPort.h IOPattern.h ModuleConfig.h
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
+CORE_OBJS = \
+	Signal.o Time.o ClockConfig.o ResetConfig.o IOPort.o IOPattern.o ModuleConfig.o
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+all: main
 
-# 清除編譯產生的檔案
+# object file rules
+Signal.o: Signal.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) Signal.cpp
+
+Time.o: Time.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) Time.cpp
+
+ClockConfig.o: ClockConfig.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) ClockConfig.cpp
+
+ResetConfig.o: ResetConfig.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) ResetConfig.cpp
+
+IOPort.o: IOPort.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) IOPort.cpp
+
+IOPattern.o: IOPattern.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) IOPattern.cpp
+
+ModuleConfig.o: ModuleConfig.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) ModuleConfig.cpp
+
+main.o: main.cpp $(CORE_INCS)
+	$(CXX) -c $(CFLAGS) main.cpp
+
+main: $(CORE_OBJS) main.o
+	$(CXX) -o main $(CORE_OBJS) main.o $(LDFLAGS)
+
 clean:
-	rm -f $(TARGET) $(OBJS)
+	rm -f *.o *~ core main
