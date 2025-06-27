@@ -1,20 +1,25 @@
-#ifndef _CLOCK_CONFIG_H_
-#define _CLOCK_CONFIG_H_
+#ifndef _CLOCKCONFIG_H_
+#define _CLOCKCONFIG_H_
 
-#include "Signal.h"
+#include <string>
+#include "Config.h"
 #include <jsoncpp/json/json.h>
 
-class ClockConfig
-{
+class ClockConfig : public Config {
 public:
-  Signal signal;
-  int period;
-  std::string unit;
+    int period;
+    std::string unit;
 
-  ClockConfig();
-  ClockConfig(Signal, int, std::string);
+    ClockConfig();
+    ClockConfig(Signal, int, std::string);
 
-  Json::Value *dump2JSON(void);
+    void SetPeriod(int);
+    int GetPeriod() const;
+
+    void SetUnit(const std::string&);
+    std::string GetUnit() const;
+
+    Json::Value* dump2JSON(void);
 };
 
-#endif /* _CLOCK_CONFIG_H_ */
+#endif

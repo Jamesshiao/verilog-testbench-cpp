@@ -1,0 +1,85 @@
+{
+	"IO patterns" : 
+	[
+		{
+			"inputs" : 
+			{
+				"a" : "0000",
+				"b" : "0000",
+				"rst" : "1",
+				"sel" : "0"
+			},
+			"time" : 0
+		},
+		{
+			"inputs" : 
+			{
+				"rst" : "0"
+			},
+			"time" : 5
+		},
+		{
+			"expected_outputs" : 
+			{
+				"sum" : "0101"
+			},
+			"inputs" : 
+			{
+				"a" : "0010",
+				"b" : "0011",
+				"sel" : "1"
+			},
+			"time" : 12
+		},
+		{
+			"expected_outputs" : 
+			{
+				"result" : "0101"
+			},
+			"time" : 22
+		},
+		{
+			"inputs" : 
+			{
+				"sel" : "0"
+			},
+			"time" : 25
+		},
+		{
+			"expected_outputs" : 
+			{
+				"result" : "0010"
+			},
+			"time" : 35
+		}
+	],
+	"IO ports" : 
+	{
+		"inputs" : 
+		[
+			"clk",
+			"rst",
+			"a",
+			"b",
+			"sel"
+		],
+		"outputs" : 
+		[
+			"result"
+		]
+	},
+	"clock" : 
+	{
+		"period" : 10,
+		"signal" : "clk",
+		"unit" : "ns"
+	},
+	"module" : "add_dff",
+	"reset" : 
+	{
+		"active_high" : true,
+		"name" : "rst",
+		"type" : "synchronous"
+	},
+	"timescale" : "1ns/1ps"
+}

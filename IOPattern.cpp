@@ -13,6 +13,66 @@ IOPattern::IOPattern(Time arg_time,
     this->expected_outputs = out;
 }
 
+void IOPattern::setTime(const Time& arg_time)
+{
+    this->time = arg_time;
+}
+
+Time IOPattern::getTime() const
+{
+    return this->time;
+}
+
+void IOPattern::setInputs(const std::map<Signal, std::string>& in)
+{
+    this->inputs = in;
+}
+
+const std::map<Signal, std::string>& IOPattern::getInputs() const
+{
+    return this->inputs;
+}
+
+void IOPattern::addInput(const Signal& signal, const std::string& value)
+{
+    this->inputs[signal] = value;
+}
+
+void IOPattern::removeInput(const Signal& signal)
+{
+    this->inputs.erase(signal);
+}
+
+void IOPattern::clearInputs()
+{
+    this->inputs.clear();
+}
+
+void IOPattern::setExpectedOutputs(const std::map<Signal, std::string>& out)
+{
+    this->expected_outputs = out;
+}
+
+const std::map<Signal, std::string>& IOPattern::getExpectedOutputs() const
+{
+    return this->expected_outputs;
+}
+
+void IOPattern::addExpectedOutput(const Signal& signal, const std::string& value)
+{
+    this->expected_outputs[signal] = value;
+}
+
+void IOPattern::removeExpectedOutput(const Signal& signal)
+{
+    this->expected_outputs.erase(signal);
+}
+
+void IOPattern::clearExpectedOutputs()
+{
+    this->expected_outputs.clear();
+}
+
 Json::Value* IOPattern::dump2JSON(void)
 {
     Json::Value* result_ptr = this->time.dump2JSON();

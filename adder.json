@@ -1,0 +1,45 @@
+{
+	"IO patterns" : 
+	[
+		{
+			"expected_outputs" : 
+			{
+				"sum" : "0000"
+			},
+			"inputs" : 
+			{
+				"a" : "0000",
+				"b" : "0000"
+			},
+			"time" : 0
+		},
+		{
+			"expected_outputs" : 
+			{
+				"sum" : "0101"
+			},
+			"inputs" : 
+			{
+				"a" : "0010",
+				"b" : "0011"
+			},
+			"time" : 12
+		}
+	],
+	"IO ports" : 
+	{
+		"inputs" : 
+		[
+			"a",
+			"b"
+		],
+		"outputs" : 
+		[
+			"sum"
+		]
+	},
+	"clock" : null,
+	"module" : "adder",
+	"reset" : null,
+	"timescale" : "1ns/1ps"
+}
