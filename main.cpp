@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include "ModuleConfig.h"
 
 int main() {
@@ -20,10 +19,7 @@ int main() {
     );
 
     Json::Value* adder_json = adder.dump2JSON();
-    std::ofstream adder_out("adder.json");
-    adder_out << adder_json->toStyledString();
-    adder_out.close();
-    std::cout << adder_json->toStyledString() << std::endl;
+    std::cout << "=== adder.json ===\n" << adder_json->toStyledString() << std::endl;
     delete adder_json;
 
     ModuleConfig add_dff;
@@ -83,12 +79,9 @@ int main() {
         { { Signal("result"), "0010" } }
     ));
 
-    Json::Value* main_json = add_dff.dump2JSON();
-    std::ofstream main_out("main.json");
-    main_out << main_json->toStyledString();
-    main_out.close();
-    std::cout << main_json->toStyledString() << std::endl;
-    delete main_json;
+    Json::Value* add_dff_json = add_dff.dump2JSON();
+    std::cout << "=== add_dff.json ===\n" << add_dff_json->toStyledString() << std::endl;
+    delete add_dff_json;
 
     return 0;
 }
