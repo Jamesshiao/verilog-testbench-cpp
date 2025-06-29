@@ -27,8 +27,13 @@ A Verilog design combining combinational and sequential logic is verified using 
 The sequential part includes a D flip-flop and a multiplexer controlled by signal "sel". When "sel" is high, the result is taken from the flip-flop output; otherwise, it reflects the adder input "a". The full module add_dff integrates both clock and reset. It has five inputs ("clk", "rst", "a", "b", "sel") and one output ("result"). The clock "clk" runs with a 10ns period, and the reset "rst" is synchronous and active-high.
 
 At time 0 with reset("rst" = 1), inputs "a" and "b" set to "0000", and "sel" set to "0". 
+
 At time 5, reset is deactivated ("rst" = 0). 
+
 At time 12, "a" = "0010", "b" = "0011", and "sel" = "1".
+
 At time 22, output "result" is expected to be "0101". 
+
 At time 25, "sel" switches to "0".
+
 At time 35, the output "result" is expected to be "0010".
