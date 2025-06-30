@@ -39,7 +39,7 @@ At time 25, "sel" switches to "0".
 At time 35, the output "result" is expected to be "0010".
 
 ## Scenario to JSON
-# adder (first scenario)
+### adder (first scenario)
 ```json
 {
   "module": "adder",
@@ -77,7 +77,7 @@ At time 35, the output "result" is expected to be "0010".
   ]
 }
 ```
-# add_dff (full scenario)
+### add_dff (full scenario)
 ```json
 {
   "module": "add_dff",
