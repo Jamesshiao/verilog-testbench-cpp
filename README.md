@@ -37,3 +37,90 @@ At time 22, output "result" is expected to be "0101".
 At time 25, "sel" switches to "0".
 
 At time 35, the output "result" is expected to be "0010".
+
+## Scenario to JSON
+# adder (first scenario)
+```json
+{
+  "module": "adder",
+  "timescale": "1ns/1ps",
+  "IO ports": {
+    "inputs": [
+      "a",
+      "b"
+    ],
+    "outputs": [
+      "sum"
+    ]
+  },
+  "IO patterns": [
+    {
+      "inputs": {
+        "a": "0000",
+        "b": "0000"
+      },
+      "expected_outputs": {
+        "sum": "0000"
+      },
+      "time": 0
+    },
+    {
+      "inputs": {
+        "a": "0010",
+        "b": "0011"
+      },
+      "expected_outputs": {
+        "sum": "0101"
+      },
+      "time": 12
+    }
+  ]
+}
+```
+# add_dff (full scenario)
+```json
+{
+  "module": "add_dff",
+  "timescale": "1ns/1ps",
+  "clock": {
+    "name": "clk",
+    "period": 10,
+    "unit": "ns"
+  },
+  "reset": {
+    "name": "rst",
+    "type": "synchronous",
+    "active_high": true
+  },
+  "IO ports": {
+    "inputs": ["clk", "rst", "a", "b", "sel"],
+    "outputs": ["result"]
+  },
+  "IO patterns": [
+    {
+      "time": 0,
+      "inputs": {"a": "0000", "b": "0000", "rst": "1", "sel": "0"}
+    },
+    {
+      "time": 5,
+      "inputs": {"rst": "0"}
+    },
+    {
+      "time": 12,
+      "inputs": {"a": "0010", "b": "0011", "sel": "1"}
+    },
+    {
+      "time": 22,
+      "expected_outputs": {"result": "0101"}
+    },
+    {
+      "time": 25,
+      "inputs": {"sel": "0"}
+    },
+    {
+      "time": 35,
+      "expected_outputs": {"result": "0010"}
+    }
+  ]
+}
+```
