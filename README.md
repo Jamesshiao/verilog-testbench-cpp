@@ -124,3 +124,19 @@ At time 35, the output "result" is expected to be "0010".
   ]
 }
 ```
+
+## C++ Classes Hierarchy
+### ModuleConfig (Top class)
+- `ClockConfig`
+- `ResetConfig`
+- `IOPort`
+- `IOPattern`
+### ClockConfig
+- Inherit from `Config`
+### ResetConfig
+- Inherit from `Config`
+### Config
+- `Signal`
+### IOPattern
+- `Signal`
+- `Time`
